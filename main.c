@@ -35,7 +35,7 @@ SDL_Surface* LoadImage(const char *path) {
 SDL_Surface* display_image(SDL_Surface *img) {
   SDL_Surface          *screen;
   // Set the window to the same size as the image
-  screen = SDL_SetVideoMode(img->w, img->h, 0, SDL_SWSURFACE|SDL_ANYFORMAT);
+  screen = SDL_SetVideoMode(img->w, img->h, 0, SDL_SWSURFACE|SDL_ANYFORMAT|SDL_DOUBLEBUF);
   if ( screen == NULL ) {
     // error management
     errx(1, "Couldn't set %dx%d video mode: %s\n",
@@ -85,9 +85,12 @@ SDL_Surface **SurfaceSplit(SDL_Surface *img, int histo[], int *ref) {
                 i++;
             }
             end = i;
-
-            
-            surfaces[count]; count++;
+            SDL_Rect src = {0,begin, img->w, end - begin + 1};
+            SDL_Surface *screen = SDL_SetVideoMode(img->w, end - begin + 1, 0, SDL_SWSURFACE|SDL_ANYFORMAT|SDL_DOUBLEBUF);
+            SDL_BlitSurface(image, &src, screen, NULL);
+            SDL_UpdateRect(screen, 0, 0, img->w, src.h);
+            display_image()
+            SDL_SaveBMP(screen); count++;
         }
     }
 
