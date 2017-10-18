@@ -62,45 +62,31 @@ void binarisation(SDL_Surface* image) {
             Uint8 r,g,b;
             SDL_GetRGB(getpixel(image, i, j), image -> format, &r, &g, &b);
             float tot = (r * 0.3 + g * 0.59 + b * 0.11);
-            if (tot > 210) {
-                tot = 255;
-            }
-            else {
-                tot = 0;
-            }
+            tot = tot > 210 ? 255 : 0;
             putpixel(image, i, j, SDL_MapRGB(image -> format, tot, tot, tot));
         }
     }
 }
 
-SDL_Surface **SurfaceSplit(SDL_Surface *img, int histo[], int *ref) {
+/*SDL_Surface ***/void SurfaceSplit(SDL_Surface *img, int histo[]) {//, int *ref) {
 
-    SDL_Surface *surfaces[image -> w];
-    int count = 0;
-
-    for (size_t i = 0; i < img -> h; i++) {
+    for (int i = 0; i < img->h; i++) {
         if (histo[i] != -1){
-            int begin = i, end;
-            while (i < img -> h && histo[i] != -1) {
-                i++;
-            }
-            end = i;
-            SDL_Rect src = {0,begin, img->w, end - begin + 1};
-            SDL_Surface *screen = SDL_SetVideoMode(img->w, end - begin + 1, 0, SDL_SWSURFACE|SDL_ANYFORMAT|SDL_DOUBLEBUF);
-            SDL_BlitSurface(image, &src, screen, NULL);
-            SDL_UpdateRect(screen, 0, 0, img->w, src.h);
-            display_image()
-            SDL_SaveBMP(screen); count++;
+            int begin = i;
+            i++;
+            while (i < img -> h && histo[i] != -1) { i++; }
+            int end = i;
+            SDL_Rect src = {0, begin, img->w, end - begin};
+            SDL_Surface *screen = SDL_SetVideoMode(img->w, end - begin, 0, SDL_SWSURFACE|SDL_ANYFORMAT|SDL_DOUBLEBUF);
+            SDL_BlitSurface(img, &src, screen, NULL);
+            SDL_UpdateRect(screen, 0, 0, img->w, end - begin);
+            wait_for_keypressed();
+        }
+
+        else {
+            i++;
         }
     }
-
-    SDL_Surface *ret[] = malloc(count - 1 * sizeof(*surfaces));
-    for (size_t i = 0; i < count - 1; i++) {
-        ret[i] = surfaces[i];
-    }
-
-    *ref = count - 1;
-    return ret;
 }
 
 int *HistoHorizontal(SDL_Surface *image) {
@@ -124,7 +110,7 @@ int main(int argc, const char *argv[]) {
         errx(1,"%s", "wrong usage");
     }
 
-    int nblignes;
+    //int nblignes;
 
     init_sdl();
     SDL_Surface* image = LoadImage(argv[1]);
@@ -133,11 +119,18 @@ int main(int argc, const char *argv[]) {
     binarisation(image);
     display_image(image);
 
-    SDL_Surface *lignes[] = SurfaceSplit(image, HistoHorizontal(image), &nblignes);
-
-    for (size_t i = 0; i < nblignes; i++) {
-
+    int *hist = HistoHorizontal(image);
+    for (int i = 0; i < image -> h; i++) {
+        printf("%d\n", hist[i]);
     }
+
+    SurfaceSplit(image, hist);
+    /*SDL_Surface **lignes = SurfaceSplit(image, HistoHorizontal(image), &nblignes);
+
+    for (int i = 0; i < nblignes; i++) {
+        display_image(lignes[i]);
+    }
+    */
     SDL_FreeSurface(image);
     return 0;
 
