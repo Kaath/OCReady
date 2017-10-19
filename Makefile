@@ -7,7 +7,7 @@ CFLAGS= -Wall -Wextra -Werror -std=c99 -O3
 LDFLAGS=
 LDLIBS= `pkg-config --libs sdl` -lSDL_image
 
-OBJ= pixel_operations.o main.o
+OBJ= pixel_operations.o main.o segmentation.o Sobel.o sdl_OP.o
 DEP= ${OBJ:.o=.d}
 
 all: main
