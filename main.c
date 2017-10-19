@@ -105,6 +105,61 @@ int *HistoHorizontal(SDL_Surface *image) {
     return histo;
 }
 
+int* SobelH(SDL_Surface* img) {
+
+    int *hist = malloc((img -> w * img -> h) * sizeof(int));
+    for (int i = 0; i < img->h; ++i)
+    {
+        for (int j = 0; j < img->w-1; ++j)
+        {
+            if (getpixel(img, i, j) != getpixel(img, i, j + 1))
+            {
+                hist[i + j*img->w] = 1;
+            }
+        }
+    }
+    return hist;
+}
+
+int* SobelV(SDL_Surface* img) {
+
+    int *hist = malloc((img -> w * img -> h) * sizeof(int));
+    for (int i = 0; i < img->w; ++i)
+    {
+        for (int j = 0; j < img->h-1; ++j)
+        {
+            if (getpixel(img, i, j) != getpixel(img, i + 1, j))
+            {
+                hist[i + j*img->h] = 1;
+            }
+        }
+    }
+    return hist;
+}
+
+SDL_Surface* Sobel(SDL_Surface* img)
+{
+    int *hori = SobelH(img);
+    int *vert = SobelV(img);
+    for (int i = 0; i<img->w; ++i)
+    {
+        for (int j = 0; j<img->h; ++j)
+        {
+            if (hori[j +i * img->h] == 1 || vert[j + i * img->h] == 1)
+            {
+                putpixel(img, j, i, SDL_MapRGB(img->format,0,0,0));
+            }
+            else
+            {
+                putpixel(img, j, i, SDL_MapRGB(img->format,255,255,255));
+            }
+        }
+    }
+    free(hori);
+    free(vert);
+    return img;
+}
+
 int main(int argc, const char *argv[]) {
     if (argc < 2) {
         errx(1,"%s", "wrong usage");
@@ -119,13 +174,17 @@ int main(int argc, const char *argv[]) {
     binarisation(image);
     display_image(image);
 
+    Sobel(image);
+    display_image(image);
+
+/*
     int *hist = HistoHorizontal(image);
     for (int i = 0; i < image -> h; i++) {
         printf("%d\n", hist[i]);
     }
 
     SurfaceSplit(image, hist);
-    /*SDL_Surface **lignes = SurfaceSplit(image, HistoHorizontal(image), &nblignes);
+    SDL_Surface **lignes = SurfaceSplit(image, HistoHorizontal(image), &nblignes);
 
     for (int i = 0; i < nblignes; i++) {
         display_image(lignes[i]);

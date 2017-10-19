@@ -17,7 +17,7 @@ main: ${OBJ}
 clean:
 	${RM} ${OBJ} ${DEP} *~ *d
 	${RM} main
-   
+
 run:
 	./main ${ARGS}
 	make clean
