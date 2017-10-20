@@ -1,5 +1,5 @@
 #include <SDL/SDL.h>
-#include <SDL/SD_image.h>
+#include <SDL/SDL_image.h>
 #include <err.h>
 
 #include "pixel_operations.h"
