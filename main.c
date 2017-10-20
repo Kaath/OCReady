@@ -39,6 +39,14 @@ int main(int argc, const char *argv[]) {
         display_image(lignes[i]);
     }
 
+    int *characters[image -> w];
+
+    for (int i = 0; i < nblignes; i++) {
+        characters[i] = HistoMake(lignes[i], 1);
+    }
+
+    
+    lignes = SurfaceSplit()
     SDL_FreeSurface(image);
     free(lignes);
     return 0;
