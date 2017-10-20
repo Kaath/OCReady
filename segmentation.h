@@ -6,8 +6,8 @@
 
 void binarisation(SDL_Surface* image);
 
-/*SDL_Surface ***/void SurfaceSplit(SDL_Surface *img, int histo[]);//, int *ref);
+SDL_Surface **SurfaceSplit(SDL_Surface *img, int histo[], int *ref);
 
-int *HistoHorizontal(SDL_Surface *image);
+int *HistoMake(SDL_Surface *image, int vert);
 
 #endif

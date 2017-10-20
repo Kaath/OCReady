@@ -16,8 +16,9 @@ void binarisation(SDL_Surface* image) {
     }
 }
 
-/*SDL_Surface ***/void SurfaceSplit(SDL_Surface *img, int histo[]) {//, int *ref) {
-
+SDL_Surface **SurfaceSplit(SDL_Surface *img, int histo[], int *ref) {
+    SDL_Surface *imgs[img -> h];
+    int count = 0;
     for (int i = 0; i < img->h; i++) {
         if (histo[i] != -1){
             int begin = i;
@@ -28,6 +29,8 @@ void binarisation(SDL_Surface* image) {
             SDL_Surface *screen = SDL_SetVideoMode(img->w, end - begin, 0, SDL_SWSURFACE|SDL_ANYFORMAT|SDL_DOUBLEBUF);
             SDL_BlitSurface(img, &src, screen, NULL);
             SDL_UpdateRect(screen, 0, 0, img->w, end - begin);
+            imgs[count] = screen;
+            count++;
             wait_for_keypressed();
         }
 
@@ -35,32 +38,43 @@ void binarisation(SDL_Surface* image) {
             i++;
         }
     }
-}
 
-int *HistoHorizontal(SDL_Surface *image) {
-
-    int *histo = malloc(image -> h * sizeof(int));
-    for (int i = 0; i < image -> h; i++) {
-        int mid = 0, j;
-        for (j = 0; j < image -> w; j++) {
-            Uint8 r,g,b;
-            SDL_GetRGB(getpixel(image, j, i), image -> format, &r, &g, &b);
-            mid += r;
-        }
-        histo[i] = mid / j < 253 ? mid / j : -1;
+    *ref = count;
+    SDL_Surface **surfs = malloc(count * sizeof(SDL_Surface*));
+    for (int i = 0; i < count; i++) {
+        surfs[i] = imgs[i];
     }
 
-    return histo;
+    return surfs;
 }
 
-int *HistoVertical(SDL_Surface *image) {
+int *HistoMake(SDL_Surface *image, int vert) {
 
-    int *histo = malloc(image -> h * sizeof(int));
-    for (int i = 0; i < image -> h; i++) {
+    int H;
+    int W;
+    int Hbool;
+    int Vbool;
+
+    if (vert == 0) {
+        H = image -> h;
+        W = image -> w;
+        Hbool = 1;
+        Vbool = 0;
+    }
+
+    else {
+        H = image -> w;
+        W = image -> h;
+        Hbool = 0;
+        Vbool = 1;
+    }
+
+    int *histo = malloc(H * sizeof(int));
+    for (int i = 0; i < H; i++) {
         int mid = 0, j;
-        for (j = 0; j < image -> w; j++) {
+        for (j = 0; j < W; j++) {
             Uint8 r,g,b;
-            SDL_GetRGB(getpixel(image, j, i), image -> format, &r, &g, &b);
+            SDL_GetRGB(getpixel(image, j*Hbool + i*Vbool, i*Hbool + j*Vbool), image -> format, &r, &g, &b);
             mid += r;
         }
         histo[i] = mid / j < 253 ? mid / j : -1;
