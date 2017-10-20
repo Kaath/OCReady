@@ -26,12 +26,12 @@ SDL_Surface **SurfaceSplit(SDL_Surface *img, int histo[], int *ref) {
             while (i < img -> h && histo[i] != -1) { i++; }
             int end = i;
             SDL_Rect src = {0, begin, img->w, end - begin};
-            SDL_Surface *screen = SDL_SetVideoMode(img->w, end - begin, 0, SDL_SWSURFACE|SDL_ANYFORMAT|SDL_DOUBLEBUF);
+            SDL_Surface *screen = SDL_CreateRGBSurface(0, img->w, end - begin, 32, 0, 0, 0, 0);// = SDL_SetVideoMode(img->w, end - begin, 0, SDL_SWSURFACE|SDL_ANYFORMAT|SDL_DOUBLEBUF);
             SDL_BlitSurface(img, &src, screen, NULL);
-            SDL_UpdateRect(screen, 0, 0, img->w, end - begin);
+            //SDL_UpdateRect(screen, 0, 0, img->w, end - begin);
             imgs[count] = screen;
             count++;
-            wait_for_keypressed();
+            //wait_for_keypressed();
         }
 
         else {
