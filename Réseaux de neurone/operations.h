@@ -7,7 +7,7 @@ float sigmoid(float x);
 
 float sigmoidprime(float x);
 
-float *mul(float inputs, float weights, size_t n, size_t m, size_t p);
+float *mul(float m1, float m2, size_t n, size_t m, size_t p);
 
 float *apply(func_t f, float values[], size_t size);
 
