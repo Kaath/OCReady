@@ -8,7 +8,7 @@ void binarisation(SDL_Surface* image);
 
 SDL_Surface **SurfaceSplit(SDL_Surface *img, int histo[], int *ref);
 
-SDL_Surface **SurfaceCharacter(SDL_Surface **lignes, int *histo[], int *h, int *w);
+SDL_Surface **characterSplit(SDL_Surface **lignes, int *histo[], int *ref);
 
 int *HistoMake(SDL_Surface *image, int vert);
 

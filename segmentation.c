@@ -48,6 +48,41 @@ SDL_Surface **SurfaceSplit(SDL_Surface *img, int histo[], int *ref) {
     return surfs;
 }
 
+SDL_Surface **characterSplit(SDL_Surface *img[], int *histo[], int *ref) {
+    SDL_Surface *imgs[*ref * (img[0] -> w)];
+    int count = 0;
+    for (int i = 0; i < *ref; i++) {
+        SDL_Surface *s = img[i];
+        int *h = histo[i];
+        for (int j = 0; j < s -> w; j++) {
+            if (h[j] != -1) {
+                int begin = j;
+                j++;
+                while (j < s -> w && h[j] != -1) { j++; }
+                int end = j;
+                SDL_Rect src = {begin, 0, end - begin, s -> h};
+                SDL_Surface *screen = SDL_CreateRGBSurface(0, end - begin, s -> h, 32, 0, 0, 0, 0);// = SDL_SetVideoMode(img->w, end - begin, 0, SDL_SWSURFACE|SDL_ANYFORMAT|SDL_DOUBLEBUF);
+                SDL_BlitSurface(s, &src, screen, NULL);
+
+                imgs[count] = screen;
+                count++;
+            }
+
+            else {
+                j++;
+            }
+        }
+    }
+
+    *ref = count;
+    SDL_Surface **characters = malloc(count * sizeof(SDL_Surface*));
+    for (int i = 0; i < count; i++) {
+        characters[i] = imgs[i];
+    }
+
+    return characters;
+}
+
 int *HistoMake(SDL_Surface *image, int vert) {
 
     int H;

@@ -32,21 +32,24 @@ int main(int argc, const char *argv[]) {
         printf("%d\n", hist[i]);
     }
 
-    //SurfaceSplit(image, hist);
     SDL_Surface **lignes = SurfaceSplit(image, hist, &nblignes);
 
-    for (int i = 0; i < nblignes; i++) {
+    /*for (int i = 0; i < nblignes; i++) {
         display_image(lignes[i]);
-    }
+    }*/
 
-    int *characters[image -> w];
+    int *histChar[nblignes];
 
     for (int i = 0; i < nblignes; i++) {
-        characters[i] = HistoMake(lignes[i], 1);
+        histChar[i] = HistoMake(lignes[i], 1);
     }
 
-    
-    lignes = SurfaceSplit()
+    SDL_Surface **characters = characterSplit(lignes, histChar, &nblignes);
+
+    for (int i = 0; i < nblignes; i++) {
+        display_image(characters[i]);
+    }
+
     SDL_FreeSurface(image);
     free(lignes);
     return 0;
