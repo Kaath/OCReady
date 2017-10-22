@@ -5,19 +5,6 @@
 
 # include "operations.h"
 
-void print_matrix(float mat[], size_t lines, size_t cols)
-{
-  for (size_t i = 0; i<lines; i++)
-  {
-    for (size_t j = 0; j<cols; j++)
-    {
-      printf("%.4f   ", mat[i*cols +j]);
-    }
-    printf("\n");
-  }
-  printf("\n");
-}
-
 float **forward(float weightsInput[], float weightsOutput[], float inputs[], size_t HiddenUnits) {
   size_t size = 4*HiddenUnits;
   float *hiddenlayersum = mul(inputs, weightsInput, 4, 2, HiddenUnits);
