@@ -1,0 +1,33 @@
+PROJECT : OCReady
+
+Version : 0.5.2
+
+OCReady est un logiciel de reconnaissance de caractères textuels
+dans des images tous formats confondus.
+
+Pour celà la gestion d'image est supportée par la bibliothèque SDL 1.2.
+
+La partie de reconnaissance du caratère sera assurée par un
+réseau de neuronnes artificiel.
+
+Ce programme est en cours de création ainsi veuillez prendre en compte
+ce fait lors de votre appreciation du logiciel.
+
+Le programme est pour le moment coupé en deux parties logique ainsi pour
+lancer les differents traitements veuillez executer:
+
+Segmentation:
+
+> cd Segmentation
+
+> make
+
+> ./main /Images/nomDuFichierImage
+
+Reseau de neuronnes:
+
+> cd Reseau_de_Neuronne
+
+> make
+
+> ./main [0-1] nbIterations nbNeuronnesChachés
