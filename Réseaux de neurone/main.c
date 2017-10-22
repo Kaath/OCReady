@@ -1,60 +1,106 @@
 # include <stdio.h>
 # include <stdlib.h>
+# include <time.h>
+# include <err.h>
 
 # include "operations.h"
-# include "main.h"
 
+void print_matrix(float mat[], size_t lines, size_t cols)
+{
+  for (size_t i = 0; i<lines; i++)
+  {
+    for (size_t j = 0; j<cols; j++)
+    {
+      printf("%.4f   ", mat[i*cols +j]);
+    }
+    printf("\n");
+  }
+  printf("\n");
+}
 
-float *forward(float weightsInput[], float weightsOutput[], float inputs[], size_t HiddenUnits){
-  size_t = 4*HiddenUnits;
-  float hiddenlayersum[size] = mul(inputs, weightsInput, 4, 2, HiddenUnits);
-  float hiddenlayerresult[size] = apply(sigmoid, hiddenlayersum, size);
-  float outputsum[4] = mul(hiddenlayerresult, weightsOutput, 4, HiddenUnits, 1);
-  float outputresult[4] = apply(sigmoid, outputsum, 4);
+float **forward(float weightsInput[], float weightsOutput[], float inputs[], size_t HiddenUnits) {
+  size_t size = 4*HiddenUnits;
+  float *hiddenlayersum = mul(inputs, weightsInput, 4, 2, HiddenUnits);
+  float *hiddenlayerresult = apply(sigmoid, hiddenlayersum, size);
+  float *outputsum = mul(hiddenlayerresult, weightsOutput, 4, HiddenUnits, 1);
+  float *outputresult = apply(sigmoid, outputsum, 4);
 
-  float *forwardresults[4] = {hiddenlayersum, hiddenlayerresult, outputsum, outputresult};
+  float **forwardresults = malloc(4 * sizeof(float*));
+  forwardresults[0] = hiddenlayersum;
+  forwardresults[1] = hiddenlayerresult;
+  forwardresults[2] = outputsum;
+  forwardresults[3] = outputresult;
   return forwardresults;
 }
 
 
-float *backward(float weightsInput[], float weightsOutput[], float LearningRate, float forwardresults[], size_t HiddenUnits, float inputs[]){
-  float expectedoutputs[4] = {0,1,1,0};
-  float outputerror[4] = substract(expectedoutputs, *forwardresults[3], 4, 1);
+float **backward(float weightsInput[], float weightsOutput[], float LearningRate, float *forwardresults[], size_t HiddenUnits, float inputs[]){
+  float expectedoutputs[] = {0,1,1,0};
+  float *outputerror = substract(expectedoutputs, forwardresults[3], 4, 1);
 
-  float apforout[4, 1] = apply(prime, *forwardresults[2], 4);
-  float deltaoutputerror[4, 1] = dot(apforout, outputerror, 4, 1);
+  float *apforout = apply(sigmoidprime, forwardresults[2], 4);
+  float *deltaoutputerror = dot(apforout, outputerror, 4, 1);
 
-  float transfor[4*HiddenUnits] = transpose(forwardresults[1], 4, HiddenUnits);
-  float multransdelta[HiddenUnits] = multiply(transfor, deltaoutputerror, HiddenUnits, 4, 1);
-  float hiddenoutputchanges[HiddenUnits] = scalar(multransdelta, LearningRate);
+  float *transfor = transpose(forwardresults[1], 4, HiddenUnits);
+  float *multransdelta = mul(transfor, deltaoutputerror, HiddenUnits, 4, 1);
+  float *hiddenoutputchanges = scalar(multransdelta, LearningRate, 4, 1);
 
-  float transweiOut[HiddenUnits] = transpose(weightsOutput, HiddenUnits, 1);
-  float muldeltranweiOut[4*HiddenUnits] = multiply(deltaoutputerror, transweiOut, 4, 1, HiddenUnits);
-  float deltahiddenerror[4*HiddenUnits] = dot(muldeltranweiOut, apply(sigmoidprime, *forwardresults[0], 4*HiddenUnits), 4, HiddenUnits);
-  float inputhiddenchanges[2*HiddenUnits] = scalar(multiply(transpose(inputs, 8), deltahiddenerror, 2, 4, HiddenUnits), LearningRate);
+  float *transweiOut = transpose(weightsOutput, HiddenUnits, 1);
+  float *muldeltranweiOut = mul(deltaoutputerror, transweiOut, 4, 1, HiddenUnits);
+  float *deltahiddenerror = dot(muldeltranweiOut, apply(sigmoidprime, forwardresults[0], 4*HiddenUnits), 4, HiddenUnits);
+  float *multransinde = mul(transpose(inputs, 4, 2), deltahiddenerror, 2, 4, HiddenUnits);
+  float *inputhiddenchanges = scalar(multransinde, LearningRate, 2, HiddenUnits);
 
-  weightsInput = add(weightsInput, inputhiddenchanges, 2, HiddenUnits); //est-ce que ça marche? pas sur
+  weightsInput = add(weightsInput, inputhiddenchanges, 2, HiddenUnits);
   weightsOutput = add(weightsOutput, hiddenoutputchanges, HiddenUnits, 1);
 
-  float *backwardresults[2] = {deltahiddenerror, deltaoutputerror};
-  }
+
+  float **backwardresults = malloc(2 * sizeof(float*));
+  backwardresults[0] = weightsInput;
+  backwardresults[1] = weightsOutput;
+
+  return backwardresults;
 }
 
 
 int main(int argc, char *argv[])
 {
-  float LearningRate = argv[0];
-  size_t Iterations = argv[1];
-  size_t HiddenUnits = argv[2];
-  float inputs[8] = {0,0,0,1,1,0,1,1};
-  float weightsInput[2*HiddenUnits]; // mettre des valeurs flottantes random entre 0 et 1
-  float weightsOutput[HiddenUnits]; // mettre des valeurs flottantes random entre 0 et 1
-
-  for (size_t i = 0; i < Iterations; i++){
-    float* forwardresults = forward(weightsInput, weightsOutput, inputs, HiddenUnits); //Vérifier que les weights sont bien en reference et seront modifiés
-    float* backwardresults = backward(weightsInput, weightsOutput, LearningRate, forwardresults, HiddenUnits , inputs);
-    // ajouter ce qu'on veut print pendant la soutenance, genre le résultat pour chaque input à chaque itération et l'écart du résultat optenu.
+  if (argc != 4){
+    errx(1, "Wrong number of arguments, %d given, 4 expected", argc);
   }
+  else{
+    float LearningRate = atof(argv[1]);
+    size_t Iterations = (size_t)atoi(argv[2]);
+    size_t HiddenUnits = (size_t)atoi(argv[3]);
+    float inputs[] = {0,0,0,1,1,0,1,1};
+    float weightsInput[2*HiddenUnits];
+    float weightsOutput[HiddenUnits];
 
+    srand((unsigned int)time(NULL));
+
+    for (size_t i = 0; i < 2*HiddenUnits; i++) {
+      if (i < HiddenUnits) {
+        weightsOutput[i] = (float)rand()/(float)RAND_MAX;
+      }
+      weightsInput[i] = (float)rand()/(float)RAND_MAX;
+    }
+    for (size_t i = 0; i < Iterations; i++){
+      float** forwardresults = forward(weightsInput, weightsOutput, inputs, HiddenUnits);
+      float** backwardresults = backward(weightsInput, weightsOutput, LearningRate, forwardresults, HiddenUnits , inputs);
+      for (size_t i = 0; i < 2*HiddenUnits; i++) {
+        if (i < HiddenUnits) {
+            weightsOutput[i] = backwardresults[1][i];
+          }
+          weightsInput[i] = backwardresults[0][i];
+        }
+      if ((i%1000 == 999) || (i == 0)) {
+        printf("For %zu iterations :\n", i+1);
+        printf("Inputs 0,0 -> Output = %f\n", forwardresults[3][0]);
+        printf("Inputs 0,1 -> Output = %f\n", forwardresults[3][1]);
+        printf("Inputs 1,0 -> Output = %f\n", forwardresults[3][2]);
+        printf("Inputs 1,1 -> Output = %f\n\n", forwardresults[3][3]);
+      }
+    }
   return 0;
+  }
 }

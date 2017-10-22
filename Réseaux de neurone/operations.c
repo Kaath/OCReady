@@ -1,5 +1,6 @@
 # include <stdio.h>
 # include <stdlib.h>
+# include <math.h>
 
 # include "operations.h"
 
@@ -9,15 +10,15 @@ float sigmoid(float x){
 
 
 float sigmoidprime(float x){
-  return -(exp(x)/((1+exp(x))*(1+exp(x))));
+  return sigmoid(x)*(1-sigmoid(x));
 }
 
-float *mul(float m1, float m2, size_t n, size_t m, size_t p){
-  float res[lines*cols];
+float *mul(float inputs[], float weights[], size_t n, size_t m, size_t p){
+  float *res = malloc((n*p) * sizeof(float));
   for (size_t i = 0; i < n; i++) {
     for (size_t j = 0; j < p; j++) {
       for (size_t k = 0; k < m; k++) {
-        res[j + i*p] += m1[k + i*m] * m2[j + k*p];
+        res[j + i*p] += inputs[k + i*m] * weights[j + k*p];
       }
     }
   }
@@ -26,7 +27,7 @@ float *mul(float m1, float m2, size_t n, size_t m, size_t p){
 
 
 float *apply(func_t f, float values[], size_t size){
-  float res[size];
+  float *res = malloc(size * sizeof(float));
   for (size_t i = 0; i < size; i++) {
     res[i] = f(values[i]);
   }
@@ -35,10 +36,10 @@ float *apply(func_t f, float values[], size_t size){
 
 
 float *substract(float output[] , float outputresult[], size_t lines, size_t cols){
-  float res[lines*cols];
+  float *res = malloc((lines*cols) * sizeof(float));
   for (size_t i = 0; i < lines; i++) {
     for (size_t j = 0; j < cols; j++) {
-      res[j + i*cols] = mat1[j + i*cols] - mat2[j + i*cols];
+      res[j + i*cols] = output[j + i*cols] - outputresult[j + i*cols];
     }
   }
   return res;
@@ -46,10 +47,10 @@ float *substract(float output[] , float outputresult[], size_t lines, size_t col
 
 
 float *add(float output[] , float outputresult[], size_t lines, size_t cols){
-  float res[lines*cols];
+  float *res = malloc((lines*cols) * sizeof(float));
   for (size_t i = 0; i < lines; i++) {
     for (size_t j = 0; j < cols; j++) {
-      res[j + i*cols] = mat1[j + i*cols] + mat2[j + i*cols];
+      res[j + i*cols] = output[j + i*cols] + outputresult[j + i*cols];
     }
   }
   return res;
@@ -57,32 +58,30 @@ float *add(float output[] , float outputresult[], size_t lines, size_t cols){
 
 
 float *transpose(float mat[], size_t lines, size_t cols){
-  float res[lines*cols];
+  float *res = malloc((lines*cols) * sizeof(float));
   for (size_t i = 0; i < lines; i++) {
     for (size_t j = 0; j < cols; j++) {
-      res[j + i*lines] = mat[i + j*cols];
+      res[i + j*lines] = mat[j + i*cols];
     }
   }
   return res;
 }
 
 
-float *scalar(float mat[], float LearningRate){
-  float res[lines*cols];
-  for (size_t i = 0; i < lines; i++) {
-    for (size_t j = 0; j < cols; j++) {
+float *scalar(float mat[], float LearningRate, size_t lines, size_t cols){
+  float *res = malloc((lines*cols) * sizeof(float));
+  for (size_t i = 0; i < lines*cols; i++) {
       res[i] = mat[i] * LearningRate;
-    }
   }
   return res;
 }
 
 
 float *dot(float prime[] , float error[], size_t lines, size_t cols){
-  float res[lines*cols];
+  float *res = malloc((lines*cols) * sizeof(float));
   for (size_t i = 0; i < lines; i++) {
     for (size_t j = 0; j < cols; j++) {
-      res[j + i*cols] = mat1[j + i*cols] * mat2[j + i*cols];
+      res[j + i*cols] = prime[j + i*cols] * error[j + i*cols];
     }
   }
   return res;
