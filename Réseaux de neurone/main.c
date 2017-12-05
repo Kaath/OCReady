@@ -6,11 +6,11 @@
 # include "operations.h"
 
 float **forward(float weightsInput[], float weightsOutput[], float inputs[], size_t HiddenUnits) {
-  size_t size = 4*HiddenUnits;
-  float *hiddenlayersum = mul(inputs, weightsInput, 4, 2, HiddenUnits);
+  size_t size = HiddenUnits;
+  float *hiddenlayersum = mul(inputs, weightsInput, 1, 10, HiddenUnits);
   float *hiddenlayerresult = apply(sigmoid, hiddenlayersum, size);
-  float *outputsum = mul(hiddenlayerresult, weightsOutput, 4, HiddenUnits, 1);
-  float *outputresult = apply(sigmoid, outputsum, 4);
+  float *outputsum = mul(hiddenlayerresult, weightsOutput, 1, HiddenUnits, 10);
+  float *outputresult = apply(sigmoid, outputsum, 10);
 
   float **forwardresults = malloc(4 * sizeof(float*));
   forwardresults[0] = hiddenlayersum;
@@ -22,24 +22,24 @@ float **forward(float weightsInput[], float weightsOutput[], float inputs[], siz
 
 
 float **backward(float weightsInput[], float weightsOutput[], float LearningRate, float *forwardresults[], size_t HiddenUnits, float inputs[]){
-  float expectedoutputs[] = {0,1,1,0};
-  float *outputerror = substract(expectedoutputs, forwardresults[3], 4, 1);
+  float expectedoutputs[] = {1,0,1,0,1};
+  float *outputerror = substract(expectedoutputs, forwardresults[3], 1, 5);
 
-  float *apforout = apply(sigmoidprime, forwardresults[2], 4);
-  float *deltaoutputerror = dot(apforout, outputerror, 4, 1);
+  float *apforout = apply(sigmoidprime, forwardresults[2], 5);
+  float *deltaoutputerror = dot(apforout, outputerror, 1, 5);
 
-  float *transfor = transpose(forwardresults[1], 4, HiddenUnits);
-  float *multransdelta = mul(transfor, deltaoutputerror, HiddenUnits, 4, 1);
-  float *hiddenoutputchanges = scalar(multransdelta, LearningRate, 4, 1);
+  float *transfor = transpose(forwardresults[1], 1, HiddenUnits);
+  float *multransdelta = mul(transfor, deltaoutputerror, HiddenUnits, 1, 5);
+  float *hiddenoutputchanges = scalar(multransdelta, LearningRate, HiddenUnits, 1);
 
-  float *transweiOut = transpose(weightsOutput, HiddenUnits, 1);
-  float *muldeltranweiOut = mul(deltaoutputerror, transweiOut, 4, 1, HiddenUnits);
-  float *deltahiddenerror = dot(muldeltranweiOut, apply(sigmoidprime, forwardresults[0], 4*HiddenUnits), 4, HiddenUnits);
-  float *multransinde = mul(transpose(inputs, 4, 2), deltahiddenerror, 2, 4, HiddenUnits);
-  float *inputhiddenchanges = scalar(multransinde, LearningRate, 2, HiddenUnits);
+  float *transweiOut = transpose(weightsOutput, HiddenUnits, 5);
+  float *muldeltranweiOut = mul(deltaoutputerror, transweiOut, 1, 5, HiddenUnits);
+  float *deltahiddenerror = dot(muldeltranweiOut, apply(sigmoidprime, forwardresults[0], HiddenUnits), 1, HiddenUnits);
+  float *multransinde = mul(transpose(inputs, 1, 10), deltahiddenerror, 10, 1, HiddenUnits);
+  float *inputhiddenchanges = scalar(multransinde, LearningRate, 10, HiddenUnits);
 
-  weightsInput = add(weightsInput, inputhiddenchanges, 2, HiddenUnits);
-  weightsOutput = add(weightsOutput, hiddenoutputchanges, HiddenUnits, 1);
+  weightsInput = add(weightsInput, inputhiddenchanges, 10, HiddenUnits);
+  weightsOutput = add(weightsOutput, hiddenoutputchanges, HiddenUnits, 5);
 
 
   float **backwardresults = malloc(2 * sizeof(float*));
@@ -59,16 +59,22 @@ int main(int argc, char *argv[])
     float LearningRate = atof(argv[1]);
     size_t Iterations = (size_t)atoi(argv[2]);
     size_t HiddenUnits = (size_t)atoi(argv[3]);
-    float inputs[] = {0,0,0,1,1,0,1,1};
-    float weightsInput[2*HiddenUnits];
-    float weightsOutput[HiddenUnits];
+    float inputs[] = {1,0,0,0,0,0,0,0};
+    float weightsInput[10*HiddenUnits];
+    float weightsOutput[5*HiddenUnits];
+
+  /*  FILE *r = fopen("weightsIn", "rb");
+    fread(weightsInput, sizeof(weightsInput), sizeof(*weightsInput), r);
+    fclose(r);
+
+    FILE *r2 = fopen("weightsOut", "rb");
+    fread(weightsOutput, sizeof(weightsOutput), sizeof(*weightsOutput), r2);
+    fclose(r2);*/
 
     srand((unsigned int)time(NULL));
 
-    for (size_t i = 0; i < 2*HiddenUnits; i++) {
-      if (i < HiddenUnits) {
-        weightsOutput[i] = (float)rand()/(float)RAND_MAX;
-      }
+    for (size_t i = 0; i < 10*HiddenUnits; i++) {
+      weightsOutput[i] = (float)rand()/(float)RAND_MAX;
       weightsInput[i] = (float)rand()/(float)RAND_MAX;
     }
     for (size_t i = 0; i < Iterations; i++){
@@ -85,9 +91,17 @@ int main(int argc, char *argv[])
         printf("Inputs 0,0 -> Output = %f\n", forwardresults[3][0]);
         printf("Inputs 0,1 -> Output = %f\n", forwardresults[3][1]);
         printf("Inputs 1,0 -> Output = %f\n", forwardresults[3][2]);
-        printf("Inputs 1,1 -> Output = %f\n\n", forwardresults[3][3]);
+        printf("Inputs 1,1 -> Output = %f\n", forwardresults[3][3]);
+        printf("Inputs 1,1 -> Output = %f\n\n", forwardresults[3][4]);
+
       }
     }
+/*  FILE *f = fopen("weightsIn", "wb");
+  fwrite(weightsInput, sizeof(weightsInput), sizeof(*weightsInput), f);
+  fclose(f);
+  FILE *f2 = fopen("weightsOut", "wb");
+  fwrite(weightsOutput, sizeof(weightsOutput), sizeof(*weightsOutput), f2);
+  fclose(f2);*/
   return 0;
   }
 }
