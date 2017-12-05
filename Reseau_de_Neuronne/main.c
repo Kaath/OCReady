@@ -76,20 +76,27 @@ int main(int argc, char *argv[])
     float weightsInput[10*HiddenUnits];
     float weightsOutput[5*HiddenUnits];
 
-  /*  FILE *r = fopen("weightsIn", "rb");
-    fread(weightsInput, sizeof(weightsInput), sizeof(*weightsInput), r);
-    fclose(r);
+    FILE *r = fopen("weightsIn", "rb");
+    if (r != NULL) {
+        fread(weightsInput, sizeof(float), 10*HiddenUnits, r);
+        fclose(r);
+        printf("file 1 read\n");
+    }
 
     FILE *r2 = fopen("weightsOut", "rb");
-    fread(weightsOutput, sizeof(weightsOutput), sizeof(*weightsOutput), r2);
-    fclose(r2);*/
-
+    if (r2 != NULL) {
+        fread(weightsOutput, sizeof(float), 5*HiddenUnits, r2);
+        fclose(r2);
+        printf("file 2 read\n");
+    }
+    
     srand((unsigned int)time(NULL));
 
     for (size_t i = 0; i < 10*HiddenUnits; i++) {
       weightsOutput[i] = (float)rand()/(float)RAND_MAX;
       weightsInput[i] = (float)rand()/(float)RAND_MAX;
     }
+
     for (size_t i = 0; i < Iterations; i++){
       float** forwardresults = forward(weightsInput, weightsOutput, inputs, HiddenUnits);
       float** backwardresults = backward(weightsInput, weightsOutput, LearningRate, forwardresults, HiddenUnits , inputs);
@@ -109,12 +116,14 @@ int main(int argc, char *argv[])
 
       }
     }
-/*  FILE *f = fopen("weightsIn", "wb");
-  fwrite(weightsInput, sizeof(weightsInput), sizeof(*weightsInput), f);
+
+  FILE *f = fopen("weightsIn", "wb");
+  fwrite(weightsInput, sizeof(float), 10*HiddenUnits, f);
   fclose(f);
+
   FILE *f2 = fopen("weightsOut", "wb");
-  fwrite(weightsOutput, sizeof(weightsOutput), sizeof(*weightsOutput), f2);
-  fclose(f2);*/
+  fwrite(weightsOutput, sizeof(float), 5*HiddenUnits, f2);
+  fclose(f2);
   return 0;
   }
 }
