@@ -89,12 +89,13 @@ int main(int argc, char *argv[])
         fclose(r2);
         printf("file 2 read\n");
     }
-    
-    srand((unsigned int)time(NULL));
+    else{
+        srand((unsigned int)time(NULL));
 
-    for (size_t i = 0; i < 10*HiddenUnits; i++) {
-      weightsOutput[i] = (float)rand()/(float)RAND_MAX;
-      weightsInput[i] = (float)rand()/(float)RAND_MAX;
+        for (size_t i = 0; i < 10*HiddenUnits; i++) {
+          weightsOutput[i] = (float)rand()/(float)RAND_MAX;
+          weightsInput[i] = (float)rand()/(float)RAND_MAX;
+        }
     }
 
     for (size_t i = 0; i < Iterations; i++){
