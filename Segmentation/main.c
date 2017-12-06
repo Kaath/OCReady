@@ -2,6 +2,7 @@
 #include <SDL/SDL_image.h>
 #include <err.h>
 
+#include "resize.h"
 #include "pixel_operations.h"
 #include "segmentation.h"
 #include "Sobel.h"

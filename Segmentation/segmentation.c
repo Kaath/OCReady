@@ -3,6 +3,7 @@
 #include "segmentation.h"
 #include "Sobel.h"
 #include "sdl_OP.h"
+#include "resize.h"
 
 void binarisation(SDL_Surface* image) {
     for (int i = 0; i < image -> w; i++) {
@@ -28,8 +29,9 @@ SDL_Surface **SurfaceSplit(SDL_Surface *img, int histo[], int *ref) {
             SDL_Rect src = {0, begin, img->w, end - begin};
             SDL_Surface *screen = SDL_CreateRGBSurface(0, img->w, end - begin, 32, 0, 0, 0, 0);// = SDL_SetVideoMode(img->w, end - begin, 0, SDL_SWSURFACE|SDL_ANYFORMAT|SDL_DOUBLEBUF);
             SDL_BlitSurface(img, &src, screen, NULL);
+            SDL_Surface *ret = resize(screen, 28, 28);
             //SDL_UpdateRect(screen, 0, 0, img->w, end - begin);
-            imgs[count] = screen;
+            imgs[count] = ret;
             count++;
             //wait_for_keypressed();
         }
