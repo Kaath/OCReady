@@ -1,9 +1,5 @@
-#include <err.h>
 #include "sdl_OP.h"
-#include "pixel_operations.h"
-#include "segmentation.h"
-#include "Sobel.h"
-#include "sdl_OP.h"
+
 
 void wait_for_keypressed(void) {
     SDL_Event event;
@@ -33,10 +29,11 @@ SDL_Surface* LoadImage(const char *path) {
     return img;
 }
 
-SDL_Surface* display_image(SDL_Surface *img) {
-  SDL_Surface          *screen;
+SDL_Surface* display_image(SDL_Window *win, SDL_Surface *img) {
   // Set the window to the same size as the image
-  screen = SDL_SetVideoMode(img->w, img->h, 0, SDL_SWSURFACE|SDL_ANYFORMAT|SDL_DOUBLEBUF);
+  SDL_SetWindowSize(win, img->w, img->h);
+  SDL_Surface *screen = SDL_GetWindowSurface(win);
+
   if ( screen == NULL ) {
     // error management
     errx(1, "Couldn't set %dx%d video mode: %s\n",
@@ -48,7 +45,7 @@ SDL_Surface* display_image(SDL_Surface *img) {
     warnx("BlitSurface error: %s\n", SDL_GetError());
 
   // Update the screen
-  SDL_UpdateRect(screen, 0, 0, img->w, img->h);
+  SDL_UpdateWindowSurface(win);
 
   // wait for a key
   wait_for_keypressed();

@@ -1,8 +1,4 @@
 #include "Sobel.h"
-#include "pixel_operations.h"
-#include "segmentation.h"
-#include "Sobel.h"
-#include "sdl_OP.h"
 
 int* SobelH(SDL_Surface* img) {
 

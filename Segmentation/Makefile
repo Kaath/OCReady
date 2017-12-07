@@ -2,10 +2,10 @@
 
 CC=gcc
 
-CPPFLAGS= `pkg-config --cflags sdl` -MMD
-CFLAGS= -Wall -Wextra -Werror -std=c99 -O3 -g
+CPPFLAGS= `pkg-config --cflags sdl2` -MMD
+CFLAGS= -Wall -Wextra -std=c99 -O3 -g
 LDFLAGS=
-LDLIBS= `pkg-config --libs sdl` -lSDL_image -lSDL_gfx
+LDLIBS= `pkg-config --libs sdl2` -lSDL2_image
 
 OBJ= pixel_operations.o main.o segmentation.o Sobel.o sdl_OP.o resize.o
 DEP= ${OBJ:.o=.d}
@@ -19,7 +19,7 @@ clean:
 	${RM} main
 
 run:
-	gdb -q --args ./main ${ARGS}
+	./main ${ARGS}
 	make clean
 
 -include ${DEP}

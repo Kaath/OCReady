@@ -1,5 +1,5 @@
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <err.h>
 
 #include "resize.h"
@@ -19,13 +19,14 @@ int main(int argc, const char *argv[]) {
 
     init_sdl();
     SDL_Surface* image = LoadImage(argv[1]);
-    display_image(image);
+    SDL_Window *win = SDL_CreateWindow("OCReady", 0, 0, image->w, image->h, SDL_SWSURFACE);
+    display_image(win,image);
 
     binarisation(image);
-    display_image(image);
+    display_image(win,image);
 
     Sobel(image);
-    display_image(image);
+    display_image(win,image);
 
 
     int *hist = HistoMake(image, 0);
@@ -48,7 +49,7 @@ int main(int argc, const char *argv[]) {
     SDL_Surface **characters = characterSplit(lignes, histChar, &nblignes);
 
     for (int i = 0; i < nblignes; i++) {
-        display_image(characters[i]);
+        display_image(win, characters[i]);
     }
 
     SDL_FreeSurface(image);
