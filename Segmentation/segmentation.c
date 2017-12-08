@@ -113,3 +113,12 @@ int *HistoMake(SDL_Surface *image, int vert) {
 
     return histo;
 }
+/*
+char implem(SDL_Surface *img) {
+    float tab[img->w*img->h];
+    float *pix = img->pixels;
+    for (int i = 0; i < img->w * img->h; i++) {
+        tab[i] = pix[i] / 255;
+    }
+    return result(tab);
+}*/

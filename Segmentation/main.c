@@ -25,8 +25,8 @@ int main(int argc, const char *argv[]) {
     binarisation(image);
     display_image(win,image);
 
-    Sobel(image);
-    display_image(win,image);
+    //Sobel(image);
+    //display_image(win,image);
 
 
     int *hist = HistoMake(image, 0);
