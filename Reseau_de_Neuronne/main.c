@@ -58,7 +58,7 @@ float **backward(float weightsInput[], float weightsOutput[], float LearningRate
 }
 
 
-char learn(float inputs[], char expectedoutput)
+int learn(float inputs[], char expectedoutput)
 {
   float output[26];
   for (int i = 0; i<26; i++){
@@ -121,7 +121,7 @@ char learn(float inputs[], char expectedoutput)
   fwrite(weightsOutput, sizeof(float), 5*HiddenUnits, f2);
   fclose(f2);
 
-  return result;
+  return result==expectedoutput;
 }
 
 char result(float inputs[]){
