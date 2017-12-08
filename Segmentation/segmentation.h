@@ -1,8 +1,13 @@
 #ifndef _SEG_
 #define _SEG_
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
+#include "pixel_operations.h"
+#include "Sobel.h"
+#include "sdl_OP.h"
+#include "resize.h"
 
 void binarisation(SDL_Surface* image);
 
