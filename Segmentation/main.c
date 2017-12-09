@@ -21,6 +21,14 @@ float *implem(SDL_Surface *img) {
     return ret;
 }
 
+float **convert(SDL_Surface **imgs, size_t len) {
+    float **ret = malloc(len * sizeof(float*));
+    for (size_t i = 0; i < len; i++) {
+        ret[i] = implem(imgs[i]);
+    }
+    return ret;
+}
+
 int main(int argc, const char *argv[]) {
     if (argc < 2) {
         errx(1,"%s", "wrong usage");
@@ -41,7 +49,7 @@ int main(int argc, const char *argv[]) {
 
 
     int *hist = HistoMake(image, 0);
-    
+
     /*
     for (int i = 0; i < image -> h; i++) {
         printf("%d\n", hist[i]);
@@ -66,10 +74,13 @@ int main(int argc, const char *argv[]) {
         display_image(win, characters[i]);
     }
 
-    float *mat = implem(characters[0]);
+    float **mat = convert(characters, nblignes);
 
     SDL_FreeSurface(image);
-    free(lignes);
+    for (size_t i = 0; i < nblignes; i++) {
+        SDL_FreeSurface(characters[i]);
+    }
+    free(characters);
     return 0;
 
 }
