@@ -8,7 +8,18 @@
 #include "Sobel.h"
 #include "sdl_OP.h"
 
-
+float *implem(SDL_Surface *img) {
+    float *ret = malloc(img->w * img->h * sizeof(float));
+    for (int i = 0; i < img->h; i++) {
+        for (int j = 0; j < img->w; j++) {
+            Uint8 r,g,b;
+            SDL_GetRGB(getpixel(img, i, j), img -> format, &r, &g, &b);
+            ret[i] = r != (float)0 ? 1 : 0;
+            printf("%f\n", ret[i]);
+        }
+    }
+    return ret;
+}
 
 int main(int argc, const char *argv[]) {
     if (argc < 2) {
@@ -30,9 +41,12 @@ int main(int argc, const char *argv[]) {
 
 
     int *hist = HistoMake(image, 0);
+    
+    /*
     for (int i = 0; i < image -> h; i++) {
         printf("%d\n", hist[i]);
     }
+    */
 
     SDL_Surface **lignes = SurfaceSplit(image, hist, &nblignes);
 
@@ -51,6 +65,8 @@ int main(int argc, const char *argv[]) {
     for (int i = 0; i < nblignes; i++) {
         display_image(win, characters[i]);
     }
+
+    float *mat = implem(characters[0]);
 
     SDL_FreeSurface(image);
     free(lignes);

@@ -57,7 +57,7 @@ SDL_Surface **characterSplit(SDL_Surface *img[], int *histo[], int *ref) {
                 while (j < s -> w && h[j] != -1) { j++; }
                 int end = j;
                 SDL_Rect src = {begin, 0, end - begin, s -> h};
-                //SDL_Surface *screen = SDL_CreateRGBSurface(0, end - begin, s -> h, 32, 0, 0, 0, 0);// = SDL_SetVideoMode(img->w, end - begin, 0, SDL_SWSURFACE|SDL_ANYFORMAT|SDL_DOUBLEBUF);
+                //SDL_Surface *screen = SDL_CreateRGBSurface(0, end - begin, s -> h, 32, 0, 0, 0, 0);
                 //SDL_BlitSurface(s, &src, screen, NULL);
                 SDL_Surface *ret = resize(s, src, 28, 28);
                 imgs[count] = ret;
