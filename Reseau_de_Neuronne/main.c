@@ -1,9 +1,4 @@
-# include <stdio.h>
-# include <stdlib.h>
-# include <time.h>
-# include <err.h>
-
-# include "operations.h"
+#include "main.h"
 
 char treatment(float output[]){
   size_t x = 0;

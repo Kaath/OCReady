@@ -1,12 +1,4 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <err.h>
-
-#include "resize.h"
-#include "pixel_operations.h"
-#include "segmentation.h"
-#include "Sobel.h"
-#include "sdl_OP.h"
+#include "main.h"
 
 float *implem(SDL_Surface *img) {
     float *ret = malloc(img->w * img->h * sizeof(float));
@@ -29,15 +21,11 @@ float **convert(SDL_Surface **imgs, size_t len) {
     return ret;
 }
 
-int main(int argc, const char *argv[]) {
-    if (argc < 2) {
-        errx(1,"%s", "wrong usage");
-    }
-
+float **decoupe(char *path) {
     int nblignes;
 
     init_sdl();
-    SDL_Surface* image = LoadImage(argv[1]);
+    SDL_Surface* image = LoadImage(path);
     SDL_Window *win = SDL_CreateWindow("OCReady", 0, 0, image->w, image->h, SDL_SWSURFACE);
     display_image(win,image);
 
@@ -77,10 +65,9 @@ int main(int argc, const char *argv[]) {
     float **mat = convert(characters, nblignes);
 
     SDL_FreeSurface(image);
-    for (size_t i = 0; i < nblignes; i++) {
+    for (int i = 0; i < nblignes; i++) {
         SDL_FreeSurface(characters[i]);
     }
     free(characters);
-    return 0;
-
+    return mat;
 }
