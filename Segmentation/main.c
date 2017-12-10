@@ -26,7 +26,7 @@ float **convert(SDL_Surface **imgs, size_t len) {
     return ret;
 }
 
-float **decoupe(char *path) {
+float **decoupe(char *path, int *nbcharacters) {
     int nblignes;
 
     init_sdl();
@@ -68,6 +68,7 @@ float **decoupe(char *path) {
     }
 
     float **mat = convert(characters, nblignes);
+    &nbcharacters = nblignes; 
 
     SDL_FreeSurface(image);
     for (int i = 0; i < nblignes; i++) {

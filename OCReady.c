@@ -3,7 +3,8 @@
 
 int main(int argc, char const *argv[]) {
   if (argc < 2) {return 1;}
-  float **mats = decoupe((char*)argv[1]);
+  int nbcharacters;
+  float **mats = decoupe((char*)argv[1], &nbcharacters);
 
 
   /*char c = 97;
