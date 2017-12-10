@@ -11,6 +11,6 @@
 #include "Sobel.h"
 #include "sdl_OP.h"
 
-float **decoupe(char *path, int* characters);
+float **decoupe(char *path);
 
 #endif
