@@ -21,8 +21,16 @@ static
 float **convert(SDL_Surface **imgs, size_t len) {
     float **ret = malloc(len * sizeof(float*));
     for (size_t i = 0; i < len; i++) {
-        if(img->w == 1 && img->h == 1) {ret[i] = (float)-2;}
-        else if(img->w == 2 && img->h == 2) {ret[i] = (float)-1;}
+        if(img->w == 1 && img->h == 1) {
+            float *temp = malloc(sizeof(float));
+            *temp = -1;
+            ret[i] = temp;
+        }
+        else if(img->w == 2 && img->h == 2) {
+            float *temp = malloc(sizeof(float));
+            *temp = -1;
+            ret[i] = temp;
+        }
         else {
             ret[i] = implem(imgs[i]);
             }
