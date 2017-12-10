@@ -7,12 +7,12 @@ static size_t HiddenUnits = 100;
 char treatment(float output[]){
   size_t x = 0;
   for (size_t i = 0; i<sizeout; i++){
-    //printf("%f ", output[i]);
+  //  printf("%f  ", output[i]);
     if (output[i] > output[x]){
       x = i;
     }
   }
-  //printf("\n");
+//  printf("\n");
   return x + 97;
 }
 
@@ -54,6 +54,17 @@ float **backward(float weightsInput[], float weightsOutput[], float LearningRate
   backwardresults[0] = weightsInput;
   backwardresults[1] = weightsOutput;
 
+  free(outputerror);
+  free(apforout);
+  free(deltaoutputerror);
+  free(transfor);
+  free(multransdelta);
+  free(hiddenoutputchanges);
+  free(transweiOut);
+  free(muldeltranweiOut);
+  free(deltahiddenerror);
+  free(multransinde);
+  free(inputhiddenchanges);
   return backwardresults;
 }
 
@@ -108,8 +119,6 @@ int learn(float inputs[], char expectedoutput)
     }
     weightsInput[i] = backwardresults[0][i];
   }
-  free(forwardresults);
-  free(backwardresults);
 
   FILE *f = fopen("weightsIn", "wb");
   fwrite(weightsInput, sizeof(float), sizein*HiddenUnits, f);
@@ -118,11 +127,21 @@ int learn(float inputs[], char expectedoutput)
   FILE *f2 = fopen("weightsOut", "wb");
   fwrite(weightsOutput, sizeof(float), sizeout*HiddenUnits, f2);
   fclose(f2);
-
+  //printf("%c -> %c\n", result, expectedoutput );
+  for (size_t i = 0; i<4; i++){
+    free(forwardresults[i]);
+    if (i<2) {free(backwardresults[i]);}
+  }
   return result==expectedoutput;
 }
 
 char result(float inputs[]){
+  if (inputs[0] == -1){
+    return *" ";
+  }
+  if (inputs[0] == -2){
+    return *"\n";
+  }
   float weightsInput[sizein*HiddenUnits];
   float weightsOutput[sizeout*HiddenUnits];
 
@@ -141,6 +160,7 @@ char result(float inputs[]){
   }
 
   float** forwardresults = forward(weightsInput, weightsOutput, inputs);
+
 
   return treatment(forwardresults[3]);
 }
