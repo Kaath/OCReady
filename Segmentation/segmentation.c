@@ -29,6 +29,7 @@ SDL_Surface **SurfaceSplit(SDL_Surface *img, int histo[], int *ref) {
             count++;
             //wait_for_keypressed();
             SDL_Surface *rc = SDL_CreateRGBSurface(0, 1, 1, 32, 0, 0, 0, 0);
+            imgs[count] = rc;
             count++;
         }
 
@@ -52,30 +53,36 @@ SDL_Surface **characterSplit(SDL_Surface *img[], int *histo[], int *ref) {
     int count = 0;
     for (int i = 0; i < *ref; i++) {
         SDL_Surface *s = img[i];
-        int *h = histo[i];
-        for (int j = 0; j < s -> w; j++) {
-            if (h[j] != -1) {
-                int begin = j;
-                j++;
-                while (j < s -> w && h[j] != -1) { j++; }
-                int end = j;
-                SDL_Rect src = {begin, 0, end - begin, s -> h};
-                //SDL_Surface *screen = SDL_CreateRGBSurface(0, end - begin, s -> h, 32, 0, 0, 0, 0);
-                //SDL_BlitSurface(s, &src, screen, NULL);
-                SDL_Surface *ret = resize(s, src, 28, 28);
-                imgs[count] = ret;
-                count++;
-                if (lastchar == 0) {lastchar == end;}
-                else if (end - lastchar > 15) {
-                    SDL_Surface res = SDL_CreateRGBSurface(0, 2, 2, 32, 0, 0, 0, 0);
+        if(s->w == 1 && s->h == 1) {
+            imgs[count] = s;
+            count++;
+        }
+        else {
+            int *h = histo[i];
+            for (int j = 0; j < s -> w; j++) {
+                if (h[j] != -1) {
+                    int begin = j;
+                    j++;
+                    while (j < s -> w && h[j] != -1) { j++; }
+                    int end = j;
+                    SDL_Rect src = {begin, 0, end - begin, s -> h};
+                    //SDL_Surface *screen = SDL_CreateRGBSurface(0, end - begin, s -> h, 32, 0, 0, 0, 0);
+                    //SDL_BlitSurface(s, &src, screen, NULL);
+                    SDL_Surface *ret = resize(s, src, 28, 28);
                     imgs[count] = ret;
                     count++;
-                    lastchar = end;
+                    if (lastchar == 0) {lastchar = end;}
+                    else if (end - lastchar > 15) {
+                        SDL_Surface *res = SDL_CreateRGBSurface(0, 2, 2, 32, 0, 0, 0, 0);
+                        imgs[count] = res;
+                        count++;
+                        lastchar = end;
+                    }
                 }
-            }
 
-            else {
-                j++;
+                else {
+                    j++;
+                }
             }
         }
     }
