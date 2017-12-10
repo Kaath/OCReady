@@ -72,6 +72,7 @@
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <signal name="activate" handler="quit" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -194,6 +195,7 @@
                 <property name="receives_default">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
+                <signal name="clicked" handler="analysebuttonpressed" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -225,7 +227,6 @@
           <object class="GtkImage" id="image1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="pixbuf">img_fjords.jpg</property>
           </object>
           <packing>
             <property name="expand">True</property>

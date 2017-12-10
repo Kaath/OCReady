@@ -42,6 +42,7 @@ float **decoupe(char *path, int *nbcharacters) {
     //display_image(win,image);
 
     binarisation(image);
+    SDL_SaveBMP(image, "bin.bmp");
     //display_image(win,image);
 
     //Sobel(image);
