@@ -6,19 +6,26 @@ int main(int argc, char const *argv[]) {
   int nbcharacters;
   float **mats = decoupe((char*)argv[1], &nbcharacters);
 
-  /*char c = 97;
-  for (size_t j = 0; j<100; j++){
+
+  char c = 97;
+  int x = 0;
+  for (size_t j = 0; j<500; j++){
     printf("Iteration %zu :\n", j);
     for (size_t i = 0; i<26; i++){
-      learn(mats[i], c);
+      if (learn(mats[i], c)){
+        printf("%c\n", c);
+        x += 1;
+      }
       c += 1;
     }
+    printf("%d Success\n", x);
+    x = 0;
     c = 97;
-  }*/
-
-  for (size_t i = 0; i<26; i++){
-    printf("%c->%c\n",(int)i + 97, result(mats[i]));
   }
+
+  /*for (size_t i = 0; i<26; i++){
+    printf("%c->%c\n",(int)i + 97, result(mats[i]));
+  }*/
   /*mats[0][0] = -1;
   printf("space->%c!\n", result(mats[0]));
   mats[0][0] = -2;

@@ -8,7 +8,7 @@
 
 # include "operations.h"
 
-void learn(float inputs[], char expectedoutput);
+int learn(float inputs[], char expectedoutput);
 
 char result(float inputs[]);
 

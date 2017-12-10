@@ -69,7 +69,7 @@ float **backward(float weightsInput[], float weightsOutput[], float LearningRate
 }
 
 
-void learn(float inputs[], char expectedoutput)
+int learn(float inputs[], char expectedoutput)
 {
   float output[sizeout];
   for (int i = 0; i<(int)sizeout; i++){
@@ -110,6 +110,7 @@ void learn(float inputs[], char expectedoutput)
   }
 
   float** forwardresults = forward(weightsInput, weightsOutput, inputs);
+  char result = treatment(forwardresults[3]);
 
   float** backwardresults = backward(weightsInput, weightsOutput, LearningRate, forwardresults, HiddenUnits , inputs, output);
   for (size_t i = 0; i < sizein*HiddenUnits; i++) {
@@ -131,6 +132,7 @@ void learn(float inputs[], char expectedoutput)
     free(forwardresults[i]);
     if (i<2) {free(backwardresults[i]);}
   }
+  return result==expectedoutput;
 }
 
 char result(float inputs[]){
