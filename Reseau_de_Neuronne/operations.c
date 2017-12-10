@@ -17,6 +17,7 @@ float *mul(float inputs[], float weights[], size_t n, size_t m, size_t p){
   float *res = malloc((n*p) * sizeof(float));
   for (size_t i = 0; i < n; i++) {
     for (size_t j = 0; j < p; j++) {
+      res[j + i*p] = 0;
       for (size_t k = 0; k < m; k++) {
         res[j + i*p] += inputs[k + i*m] * weights[j + k*p];
       }

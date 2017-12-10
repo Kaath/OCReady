@@ -1,7 +1,7 @@
 CC=gcc
 
 CPPFLAGS= `pkg-config --cflags sdl2` -MMD
-CFLAGS= -Wall -Wextra -std=c99 -O0
+CFLAGS= -Wall -Wextra -std=c99 -O0 -g
 LDFLAGS=
 LDLIBS= -lm `pkg-config --libs sdl2` -lSDL2_image
 
@@ -13,7 +13,7 @@ all: OCReady
 OCReady: ${OBJ}
 
 clean:
-	${RM} ${OBJ} ${DEP} *~ *d
+	${RM} ${OBJ} ${DEP} *~ *d OCReady
 
 run:
 	./OCReady ${ARGS}

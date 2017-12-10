@@ -6,10 +6,13 @@ float *implem(SDL_Surface *img) {
         for (int j = 0; j < img->w; j++) {
             Uint8 r,g,b;
             SDL_GetRGB(getpixel(img, i, j), img -> format, &r, &g, &b);
-            ret[i] = r != (float)0 ? 1 : 0;
-            printf("%f\n", ret[i]);
+            ret[i*img->w +j] = r != (float)0 ? (float)1 : (float)0;
+            //printf("%f ", ret[i]); //MARCHE
         }
     }
+    /*for (int j = 0; j<784; j++){
+      printf("%f ", ret[j]); //MARCHE
+    }*/
     return ret;
 }
 
@@ -17,6 +20,8 @@ float **convert(SDL_Surface **imgs, size_t len) {
     float **ret = malloc(len * sizeof(float*));
     for (size_t i = 0; i < len; i++) {
         ret[i] = implem(imgs[i]);
+        for (size_t j = 0; j<784; j++){
+        }
     }
     return ret;
 }
@@ -27,10 +32,10 @@ float **decoupe(char *path) {
     init_sdl();
     SDL_Surface* image = LoadImage(path);
     SDL_Window *win = SDL_CreateWindow("OCReady", 0, 0, image->w, image->h, SDL_SWSURFACE);
-    display_image(win,image);
+    //display_image(win,image);
 
     binarisation(image);
-    display_image(win,image);
+    //display_image(win,image);
 
     //Sobel(image);
     //display_image(win,image);
@@ -59,7 +64,7 @@ float **decoupe(char *path) {
     SDL_Surface **characters = characterSplit(lignes, histChar, &nblignes);
 
     for (int i = 0; i < nblignes; i++) {
-        display_image(win, characters[i]);
+      //  display_image(win, characters[i]);
     }
 
     float **mat = convert(characters, nblignes);
