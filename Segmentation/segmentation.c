@@ -49,7 +49,6 @@ SDL_Surface **SurfaceSplit(SDL_Surface *img, int histo[], int *ref) {
 
 SDL_Surface **characterSplit(SDL_Surface *img[], int *histo[], int *ref) {
     SDL_Surface *imgs[*ref * (img[0] -> w)];
-    int lastchar = 0;
     int count = 0;
     for (int i = 0; i < *ref; i++) {
         SDL_Surface *s = img[i];
@@ -71,13 +70,6 @@ SDL_Surface **characterSplit(SDL_Surface *img[], int *histo[], int *ref) {
                     SDL_Surface *ret = resize(s, src, 28, 28);
                     imgs[count] = ret;
                     count++;
-                    if (lastchar == 0) {lastchar = end;}
-                    else if (end - lastchar > 15) {
-                        SDL_Surface *res = SDL_CreateRGBSurface(0, 2, 2, 32, 0, 0, 0, 0);
-                        imgs[count] = res;
-                        count++;
-                        lastchar = end;
-                    }
                 }
 
                 else {

@@ -1,6 +1,6 @@
 #include "sdl_OP.h"
 
-
+/*
 void wait_for_keypressed(void) {
     SDL_Event event;
     for (;;) {
@@ -13,7 +13,7 @@ void wait_for_keypressed(void) {
             default: break;
         }
     }
-}
+}*/
 
 void init_sdl(void) {
     if(SDL_Init(SDL_INIT_VIDEO) ==- 1) {
@@ -29,6 +29,7 @@ SDL_Surface* LoadImage(const char *path) {
     return img;
 }
 
+/*
 SDL_Surface* display_image(SDL_Window *win, SDL_Surface *img) {
   // Set the window to the same size as the image
   SDL_SetWindowSize(win, img->w, img->h);
@@ -40,7 +41,7 @@ SDL_Surface* display_image(SDL_Window *win, SDL_Surface *img) {
          img->w, img->h, SDL_GetError());
   }
 
-  /* Blit onto the screen surface */
+   Blit onto the screen surface
   if(SDL_BlitSurface(img, NULL, screen, NULL) < 0)
     warnx("BlitSurface error: %s\n", SDL_GetError());
 
@@ -52,4 +53,4 @@ SDL_Surface* display_image(SDL_Window *win, SDL_Surface *img) {
 
   // return the screen for further uses
   return screen;
-}
+}*/

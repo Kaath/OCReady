@@ -23,12 +23,7 @@ float **convert(SDL_Surface **imgs, size_t len) {
     for (size_t i = 0; i < len; i++) {
         if(imgs[i]->w == 1 && imgs[i]->h == 1) {
             float *temp = malloc(sizeof(float));
-            *temp = -1;
-            ret[i] = temp;
-        }
-        else if(imgs[i]->w == 2 && imgs[i]->h == 2) {
-            float *temp = malloc(sizeof(float));
-            *temp = -1;
+            *temp = -2;
             ret[i] = temp;
         }
         else {
@@ -43,7 +38,7 @@ float **decoupe(char *path, int *nbcharacters) {
 
     init_sdl();
     SDL_Surface* image = LoadImage(path);
-    SDL_Window *win = SDL_CreateWindow("OCReady", 0, 0, image->w, image->h, SDL_SWSURFACE);
+    //SDL_Window *win = SDL_CreateWindow("OCReady", 0, 0, image->w, image->h, SDL_SWSURFACE);
     //display_image(win,image);
 
     binarisation(image);

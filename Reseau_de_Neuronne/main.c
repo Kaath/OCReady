@@ -136,9 +136,6 @@ int learn(float inputs[], char expectedoutput)
 }
 
 char result(float inputs[]){
-  if (inputs[0] == -1){
-    return *" ";
-  }
   if (inputs[0] == -2){
     return *"\n";
   }
