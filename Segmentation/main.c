@@ -1,5 +1,6 @@
 #include "main.h"
 
+static
 float *implem(SDL_Surface *img) {
     float *ret = malloc(img->w * img->h * sizeof(float));
     for (int i = 0; i < img->h; i++) {
@@ -16,11 +17,15 @@ float *implem(SDL_Surface *img) {
     return ret;
 }
 
+static
 float **convert(SDL_Surface **imgs, size_t len) {
     float **ret = malloc(len * sizeof(float*));
     for (size_t i = 0; i < len; i++) {
-        ret[i] = implem(imgs[i]);
-        for (size_t j = 0; j<784; j++){
+        if(img->w == 1 && img->h == 1) {ret[i] = (float)-2;}
+        else if(img->w == 2 && img->h == 2) {ret[i] = (float)-1;}
+        else {
+            ret[i] = implem(imgs[i]);
+            }
         }
     }
     return ret;
@@ -68,7 +73,7 @@ float **decoupe(char *path, int *nbcharacters) {
     }
 
     float **mat = convert(characters, nblignes);
-    &nbcharacters = nblignes; 
+    &nbcharacters = nblignes;
 
     SDL_FreeSurface(image);
     for (int i = 0; i < nblignes; i++) {
