@@ -4,6 +4,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifdef UNUSED
+#elif defined(__GNUC__)
+# define UNUSED(x) UNUSED_ ## x __attribute__((unused))
+#elif defined(__LCLINT__)
+# define UNUSED(x) /*@unused@*/ x
+#else
+# define UNUSED(x) x
+#endif
+
 typedef struct
 {
   GtkBuilder *builder;
@@ -66,8 +75,6 @@ int main(int argc, char *argv[]) {
     }
     c = 97;
   }*/
-
-
   return 0;
 }
 static GtkImage* create_image (SGlobalData *data)
@@ -75,17 +82,22 @@ static GtkImage* create_image (SGlobalData *data)
   gtk_image_set_from_file (data->image, data->filename);
   return data->image;
 }
-void postbuttonpressed(GtkMenuItem *menuitem, gpointer user_data)
+void postbuttonpressed(GtkMenuItem* UNUSED(menuitem), gpointer user_data)
 {
-
   SGlobalData *data = (SGlobalData*) user_data;
-  int nbcharacters;
+  int nbcharacters = 0;
   data->nbcharacters = nbcharacters;
   data->mats = decoupe("Learn.PNG",&data->nbcharacters);
   data->filename = "bin.bmp";
   create_image(data);
 }
-void analysebuttonpressed(GtkMenuItem *menuitem, gpointer user_data)
+void writeres(char *res)
+{
+  FILE *f = fopen("file.txt", "w");
+  fprintf(f, "%s\n",res);
+  fclose(f);
+}
+void analysebuttonpressed(GtkMenuItem* UNUSED(menuitem), gpointer user_data)
 {
   SGlobalData *data = (SGlobalData*) user_data;
   char* a = malloc(data->nbcharacters);
@@ -95,14 +107,15 @@ void analysebuttonpressed(GtkMenuItem *menuitem, gpointer user_data)
     *(a+i) = c;
   }
   gtk_entry_set_text(data->entry, a);
+  writeres(a);
   free(data->mats);
 }
 
-void quit(GtkMenuItem *menuitem, gpointer user_data)
+void quit(GtkMenuItem* UNUSED(menuitem), gpointer UNUSED(user_data))
 {
   gtk_main_quit();
 }
-void callback_about (GtkMenuItem *menuitem, gpointer user_data)
+void callback_about (GtkMenuItem* UNUSED(menuitem), gpointer user_data)
 {
   /* Transtypage du pointeur user_data pour récupérer nos données. */
   SGlobalData *data = (SGlobalData*) user_data;
@@ -112,8 +125,6 @@ void callback_about (GtkMenuItem *menuitem, gpointer user_data)
   char *filename;
   GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
   filename = gtk_file_chooser_get_filename (chooser);
-  printf("%s\n",filename );
-
   /* On cache la fenêtre de dialogue. Si on la détruisait le prochain appel */
   /* à ce callback provoquerait un segdefault! */
   gtk_widget_hide (dialog);

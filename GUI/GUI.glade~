@@ -195,7 +195,7 @@
                 <property name="receives_default">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
-                <signal name="clicked" handler="analysebuttonpressed" swapped="no"/>
+                <signal name="clicked" handler="postbuttonpressed" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -210,6 +210,7 @@
                 <property name="receives_default">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
+                <signal name="clicked" handler="analysebuttonpressed" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">2</property>
@@ -238,6 +239,8 @@
           <object class="GtkEntry" id="entry1">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="width_chars">0</property>
+            <property name="max_width_chars">0</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -262,10 +265,32 @@
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
             <child>
-              <placeholder/>
+              <object class="GtkButton" id="button4">
+                <property name="label" translatable="yes">OK</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="relief">none</property>
+                <property name="yalign">0.40999999642372131</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkButton" id="button5">
+                <property name="label" translatable="yes">Cancel</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
             </child>
           </object>
           <packing>
