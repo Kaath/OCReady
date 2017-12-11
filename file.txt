@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 a b e e e f
 g k i j k l
 r r q b q r
 s x w v w x
 y z
+=======
+a l e e e t g l i j l l n n e p q n s t u v t x y z
+>>>>>>> 71ceb5bf2737e254ddab196732d51b54609f65c4
 
