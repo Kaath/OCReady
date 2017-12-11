@@ -239,6 +239,8 @@
           <object class="GtkTextView" id="textview1">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="indent">-6</property>
+            <property name="input_purpose">name</property>
           </object>
           <packing>
             <property name="expand">False</property>

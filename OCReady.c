@@ -20,7 +20,7 @@ typedef struct
   GtkImage *image;
   int nbcharacters;
   float **mats;
-  GtkEntry *entry;
+  GtkTextView *text;
   char* filename;
 } SGlobalData;
 void callback_about (GtkMenuItem *menuitem, gpointer user_data);
@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
   /* Récupération du pointeur de la fenêtre principale */
   fenetre_principale = GTK_WIDGET(gtk_builder_get_object (data.builder, "window1"));
   data.image = GTK_IMAGE(gtk_builder_get_object (data.builder, "image1"));
-  data.entry = GTK_ENTRY(gtk_builder_get_object (data.builder, "entry1"));
+  data.text = GTK_TEXT_VIEW(gtk_builder_get_object (data.builder, "textview1"));
   /* Affichage de la fenêtre principale. */
   gtk_widget_show_all (fenetre_principale);
 
@@ -106,7 +106,10 @@ void analysebuttonpressed(GtkMenuItem* UNUSED(menuitem), gpointer user_data)
     c = result(data->mats[i]);
     *(a+i) = c;
   }
-  gtk_entry_set_text(data->entry, a);
+  GtkTextIter iter;
+  GtkTextBuffer *buffer = gtk_text_view_get_buffer(data->text);
+  gtk_text_buffer_get_iter_at_offset(buffer, &iter, 0);
+  gtk_text_buffer_insert(buffer, &iter, a, -1);
   writeres(a);
   free(data->mats);
   free(a);
