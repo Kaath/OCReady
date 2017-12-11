@@ -2,7 +2,7 @@
 
 static size_t sizeout = 26;
 static size_t sizein = 784;
-static size_t HiddenUnits = 100;
+static size_t HiddenUnits = 60;
 
 char treatment(float output[]){
   size_t x = 0;
