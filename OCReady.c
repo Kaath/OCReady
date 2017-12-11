@@ -87,7 +87,7 @@ void postbuttonpressed(GtkMenuItem* UNUSED(menuitem), gpointer user_data)
   SGlobalData *data = (SGlobalData*) user_data;
   int nbcharacters = 0;
   data->nbcharacters = nbcharacters;
-  data->mats = decoupe("Learn.PNG",&data->nbcharacters);
+  data->mats = decoupe(data->filename,&data->nbcharacters);
   data->filename = "bin.bmp";
   create_image(data);
 }
@@ -109,6 +109,8 @@ void analysebuttonpressed(GtkMenuItem* UNUSED(menuitem), gpointer user_data)
   gtk_entry_set_text(data->entry, a);
   writeres(a);
   free(data->mats);
+  free(a);
+
 }
 
 void quit(GtkMenuItem* UNUSED(menuitem), gpointer UNUSED(user_data))
@@ -130,5 +132,4 @@ void callback_about (GtkMenuItem* UNUSED(menuitem), gpointer user_data)
   gtk_widget_hide (dialog);
   data->filename = filename;
   create_image(data);
-  g_free (filename);
 }
