@@ -66,7 +66,7 @@ SDL_Surface **characterSplit(SDL_Surface *img[], int *histo[], int *ref) {
                     while (j < s -> w && h[j] != -1) { j++; }
                     int end = j;
 
-                    if (lastchar != 0 && begin - lastchar > 10) {
+                    if (lastchar != 0 && begin - lastchar > 4) {
                         SDL_Surface *rc = SDL_CreateRGBSurface(0, 2, 2, 32, 0, 0, 0, 0);
                         imgs[count] = rc;
                         count++;

@@ -87,7 +87,7 @@ void postbuttonpressed(GtkMenuItem* UNUSED(menuitem), gpointer user_data)
   SGlobalData *data = (SGlobalData*) user_data;
   int nbcharacters = 0;
   data->nbcharacters = nbcharacters;
-  data->mats = decoupe("Learn.PNG",&data->nbcharacters);
+  data->mats = decoupe("calibriTest.PNG",&data->nbcharacters);
   data->filename = "bin.bmp";
   create_image(data);
 }
